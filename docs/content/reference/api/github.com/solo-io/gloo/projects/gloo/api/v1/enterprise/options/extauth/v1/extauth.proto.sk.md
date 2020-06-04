@@ -340,6 +340,10 @@ This is used with custom auth servers.
 "appUrl": string
 "callbackPath": string
 "scopes": []string
+"provideAccessToken": bool
+"introspectionUrl": string
+"userInfoUrl": string
+"tokenIntrospectionCacheTimeout": .google.protobuf.Duration
 
 ```
 
@@ -352,6 +356,10 @@ This is used with custom auth servers.
 | `appUrl` | `string` | we to redirect after successful auth, if we can't determine the original url this should be your publicly available app url. |  |
 | `callbackPath` | `string` | a callback path relative to app url that will be used for OIDC callbacks. needs to not be used by the application. |  |
 | `scopes` | `[]string` | Scopes to request in addition to openid scope. |  |
+| `provideAccessToken` | `bool` | whether or not the access token will be provided to Gloo, or if Gloo should fetch instead using issuer. according to https://tools.ietf.org/html/rfc6750 you can pass tokens through: - form-encoded body parameter. recommended, more likely to appear. e.g.: Authorization: Bearer mytoken123 - URI query parameter e.g. access_token=mytoken123. |  |
+| `introspectionUrl` | `string` | the url for the access token introspection endpoint. if provided, the (opaque) access token provided or received from the oauth endpoint will be validated against this endpoint. |  |
+| `userInfoUrl` | `string` | the url for the user info endpoint. if provided, the (opaque) access token provided or received from the oauth endpoint will be queried and the user info response will be put in the extauth filter metadata. |  |
+| `tokenIntrospectionCacheTimeout` | [.google.protobuf.Duration](https://developers.google.com/protocol-buffers/docs/reference/csharp/class/google/protobuf/well-known-types/duration) | how long the token introspection endpoint response for a specific access token should be kept in-memory cache. the introspection result will be invalidated at this timeout, or at "exp" time from the introspection result, whichever comes sooner. if omitted, defaults to 10 minutes. |  |
 
 
 
