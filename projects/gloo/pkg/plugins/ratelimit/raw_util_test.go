@@ -3,7 +3,7 @@ package ratelimit_test
 import (
 	"fmt"
 
-	envoyvhostratelimit "github.com/envoyproxy/go-control-plane/envoy/api/v2/route"
+	envoyvhostratelimit "github.com/envoyproxy/go-control-plane/envoy/config/route/v3"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
@@ -142,7 +142,7 @@ func ExpectActionsSame(actions []*gloorl.Action) {
 		// regex api is different. fix that.
 		if headers := remarshalled.GetHeaderValueMatch().GetHeaders(); headers != nil {
 			for _, h := range headers {
-				if regex := h.GetRegexMatch(); regex != "" {
+				if regex := h.GetHiddenEnvoyDeprecatedRegexMatch(); regex != "" {
 					h.HeaderMatchSpecifier = &envoyvhostratelimit.HeaderMatcher_SafeRegexMatch{
 						SafeRegexMatch: regexutils.NewRegex(nil, regex),
 					}
