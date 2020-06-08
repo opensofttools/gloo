@@ -6,9 +6,8 @@ import (
 	structpb "github.com/golang/protobuf/ptypes/struct"
 	"go.opencensus.io/trace"
 
-	envoyapi "github.com/envoyproxy/go-control-plane/envoy/api/v2"
-	envoycore "github.com/envoyproxy/go-control-plane/envoy/api/v2/core"
-	envoyendpoints "github.com/envoyproxy/go-control-plane/envoy/api/v2/endpoint"
+	envoycore "github.com/envoyproxy/go-control-plane/envoy/config/core/v3"
+	envoyendpoints "github.com/envoyproxy/go-control-plane/envoy/config/endpoint/v3"
 	v1 "github.com/solo-io/gloo/projects/gloo/pkg/api/v1"
 )
 
@@ -17,12 +16,12 @@ const SoloAnnotations = "io.solo.annotations"
 
 // Endpoints
 
-func computeClusterEndpoints(ctx context.Context, upstreams []*v1.Upstream, endpoints []*v1.Endpoint) []*envoyapi.ClusterLoadAssignment {
+func computeClusterEndpoints(ctx context.Context, upstreams []*v1.Upstream, endpoints []*v1.Endpoint) []*envoyendpoints.ClusterLoadAssignment {
 
 	_, span := trace.StartSpan(ctx, "gloo.translator.computeClusterEndpoints")
 	defer span.End()
 
-	var clusterEndpointAssignments []*envoyapi.ClusterLoadAssignment
+	var clusterEndpointAssignments []*envoyendpoints.ClusterLoadAssignment
 	for _, upstream := range upstreams {
 		clusterEndpoints := endpointsForUpstream(upstream, endpoints)
 		// if there are any endpoints for this upstream, it's using eds and we need to create a load assignment for it
@@ -34,7 +33,7 @@ func computeClusterEndpoints(ctx context.Context, upstreams []*v1.Upstream, endp
 	return clusterEndpointAssignments
 }
 
-func loadAssignmentForUpstream(upstream *v1.Upstream, clusterEndpoints []*v1.Endpoint) *envoyapi.ClusterLoadAssignment {
+func loadAssignmentForUpstream(upstream *v1.Upstream, clusterEndpoints []*v1.Endpoint) *envoyendpoints.ClusterLoadAssignment {
 	clusterName := UpstreamToClusterName(upstream.Metadata.Ref())
 	var endpoints []*envoyendpoints.LbEndpoint
 	for _, addr := range clusterEndpoints {
@@ -69,7 +68,7 @@ func loadAssignmentForUpstream(upstream *v1.Upstream, clusterEndpoints []*v1.End
 		endpoints = append(endpoints, &lbEndpoint)
 	}
 
-	return &envoyapi.ClusterLoadAssignment{
+	return &envoyendpoints.ClusterLoadAssignment{
 		ClusterName: clusterName,
 		Endpoints: []*envoyendpoints.LocalityLbEndpoints{{
 			LbEndpoints: endpoints,

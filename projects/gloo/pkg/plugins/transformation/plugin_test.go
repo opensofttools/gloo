@@ -1,7 +1,7 @@
 package transformation_test
 
 import (
-	envoyroute "github.com/envoyproxy/go-control-plane/envoy/api/v2/route"
+	envoyroute "github.com/envoyproxy/go-control-plane/envoy/config/route/v3"
 	"github.com/golang/protobuf/ptypes/any"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

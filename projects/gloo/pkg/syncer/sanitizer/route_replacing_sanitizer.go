@@ -4,9 +4,10 @@ import (
 	"context"
 	"sort"
 
-	endpoint "github.com/envoyproxy/go-control-plane/envoy/api/v2/endpoint"
-	listener "github.com/envoyproxy/go-control-plane/envoy/api/v2/listener"
-	v2 "github.com/envoyproxy/go-control-plane/envoy/config/filter/network/http_connection_manager/v2"
+	cluster "github.com/envoyproxy/go-control-plane/envoy/config/cluster/v3"
+	endpoint "github.com/envoyproxy/go-control-plane/envoy/config/endpoint/v3"
+	listener "github.com/envoyproxy/go-control-plane/envoy/config/listener/v3"
+	v2 "github.com/envoyproxy/go-control-plane/envoy/extensions/filters/network/http_connection_manager/v3"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/solo-io/gloo/pkg/utils/gogoutils"
 	"github.com/solo-io/solo-kit/pkg/api/v1/control-plane/util"
@@ -18,8 +19,8 @@ import (
 	"go.uber.org/zap"
 
 	envoyapi "github.com/envoyproxy/go-control-plane/envoy/api/v2"
-	core "github.com/envoyproxy/go-control-plane/envoy/api/v2/core"
-	envoyroute "github.com/envoyproxy/go-control-plane/envoy/api/v2/route"
+	core "github.com/envoyproxy/go-control-plane/envoy/config/core/v3"
+	envoyroute "github.com/envoyproxy/go-control-plane/envoy/config/route/v3"
 	"github.com/gogo/protobuf/proto"
 	"github.com/rotisserie/eris"
 	v1 "github.com/solo-io/gloo/projects/gloo/pkg/api/v1"
@@ -44,8 +45,8 @@ var (
 
 type RouteReplacingSanitizer struct {
 	enabled          bool
-	fallbackListener *envoyapi.Listener
-	fallbackCluster  *envoyapi.Cluster
+	fallbackListener *listener.Listener
+	fallbackCluster  *cluster.Cluster
 }
 
 func NewRouteReplacingSanitizer(cfg *v1.GlooOptions_InvalidConfigPolicy) (*RouteReplacingSanitizer, error) {
@@ -65,12 +66,12 @@ func NewRouteReplacingSanitizer(cfg *v1.GlooOptions_InvalidConfigPolicy) (*Route
 	}, nil
 }
 
-func makeFallbackListenerAndCluster(responseCode uint32, responseBody string) (*envoyapi.Listener, *envoyapi.Cluster, error) {
+func makeFallbackListenerAndCluster(responseCode uint32, responseBody string) (*listener.Listener, *cluster.Cluster, error) {
 	hcmConfig := &v2.HttpConnectionManager{
 		CodecType:  v2.HttpConnectionManager_AUTO,
 		StatPrefix: fallbackListenerName,
 		RouteSpecifier: &v2.HttpConnectionManager_RouteConfig{
-			RouteConfig: &envoyapi.RouteConfiguration{
+			RouteConfig: &envoyroute.RouteConfiguration{
 				Name: "fallback_routes",
 				VirtualHosts: []*envoyroute.VirtualHost{{
 					Name:    "fallback_virtualhost",
@@ -105,7 +106,7 @@ func makeFallbackListenerAndCluster(responseCode uint32, responseBody string) (*
 		return nil, nil, err
 	}
 
-	fallbackListener := &envoyapi.Listener{
+	fallbackListener := &listener.Listener{
 		Name: fallbackListenerName,
 		Address: &core.Address{
 			Address: &core.Address_Pipe{
@@ -124,10 +125,10 @@ func makeFallbackListenerAndCluster(responseCode uint32, responseBody string) (*
 		}},
 	}
 
-	fallbackCluster := &envoyapi.Cluster{
+	fallbackCluster := &cluster.Cluster{
 		Name:           fallbackClusterName,
 		ConnectTimeout: gogoutils.DurationStdToProto(&translator.ClusterConnectionTimeout),
-		LoadAssignment: &envoyapi.ClusterLoadAssignment{
+		LoadAssignment: &endpoint.ClusterLoadAssignment{
 			ClusterName: fallbackClusterName,
 			Endpoints: []*endpoint.LocalityLbEndpoints{{
 				LbEndpoints: []*endpoint.LbEndpoint{{
@@ -223,8 +224,8 @@ func getClusters(snap *v1.ApiSnapshot) map[string]struct{} {
 	return validClusters
 }
 
-func (s *RouteReplacingSanitizer) replaceMissingClusterRoutes(ctx context.Context, validClusters map[string]struct{}, routeConfigs []*envoyapi.RouteConfiguration) ([]*envoyapi.RouteConfiguration, bool) {
-	var sanitizedRouteConfigs []*envoyapi.RouteConfiguration
+func (s *RouteReplacingSanitizer) replaceMissingClusterRoutes(ctx context.Context, validClusters map[string]struct{}, routeConfigs []*envoyapi.RouteConfiguration) ([]*envoyroute.RouteConfiguration, bool) {
+	var sanitizedRouteConfigs []*envoyroute.RouteConfiguration
 
 	isInvalid := func(cluster string) bool {
 		_, ok := validClusters[cluster]
@@ -238,7 +239,7 @@ func (s *RouteReplacingSanitizer) replaceMissingClusterRoutes(ctx context.Contex
 	// replace any routes which do not point to a valid destination cluster
 	for _, cfg := range routeConfigs {
 		var replaced int64
-		sanitizedRouteConfig := proto.Clone(cfg).(*envoyapi.RouteConfiguration)
+		sanitizedRouteConfig := proto.Clone(cfg).(*envoyroute.RouteConfiguration)
 
 		for i, vh := range sanitizedRouteConfig.GetVirtualHosts() {
 			for j, route := range vh.GetRoutes() {
