@@ -25,6 +25,7 @@ import "gloo/projects/gloo/api/v1/options/azure/azure.proto";
 import "gloo/projects/gloo/api/v1/options/consul/consul.proto";
 import "gloo/projects/gloo/api/v1/options/aws/ec2/aws_ec2.proto";
 import "gloo/projects/gloo/api/v1/options.proto";
+import "gloo/projects/gloo/api/v1/enterprise/options/failover/failover.proto";
 
 
 /*
@@ -76,9 +77,17 @@ message Upstream {
         consul.options.gloo.solo.io.UpstreamSpec consul = 16;
         aws_ec2.options.gloo.solo.io.UpstreamSpec aws_ec2 = 17;
     }
+
+    message UpstreamOptions {
+        failover.options.gloo.solo.io.Failover failover = 1;
+    }
+
+    UpstreamOptions options = 18;
 }
 
 // created by discovery services
 message DiscoveryMetadata {
     
 }
+
+

@@ -257,6 +257,30 @@ apis:
   envoy.api.v2.route.WeightedCluster:
     relativepath: reference/api/envoy/api/v2/route/route.proto.sk/#WeightedCluster
     package: envoy.api.v2.route
+  envoy.config.core.v3.Address:
+    relativepath: reference/api/envoy/config/core/v3/address.proto.sk/#Address
+    package: envoy.config.core.v3
+  envoy.config.core.v3.Locality:
+    relativepath: reference/api/envoy/config/core/v3/base.proto.sk/#Locality
+    package: envoy.config.core.v3
+  envoy.config.core.v3.Pipe:
+    relativepath: reference/api/envoy/config/core/v3/address.proto.sk/#Pipe
+    package: envoy.config.core.v3
+  envoy.config.core.v3.SocketAddress:
+    relativepath: reference/api/envoy/config/core/v3/address.proto.sk/#SocketAddress
+    package: envoy.config.core.v3
+  envoy.config.endpoint.v3.Endpoint:
+    relativepath: reference/api/envoy/config/endpoint/v3/endpoint_components.proto.sk/#Endpoint
+    package: envoy.config.endpoint.v3
+  envoy.config.endpoint.v3.LbEndpoint:
+    relativepath: reference/api/envoy/config/endpoint/v3/endpoint_components.proto.sk/#LbEndpoint
+    package: envoy.config.endpoint.v3
+  envoy.config.endpoint.v3.Locality:
+    relativepath: reference/api/envoy/config/endpoint/v3/endpoint_components.proto.sk/#Locality
+    package: envoy.config.endpoint.v3
+  envoy.config.endpoint.v3.LocalityLbEndpoints:
+    relativepath: reference/api/envoy/config/endpoint/v3/endpoint_components.proto.sk/#LocalityLbEndpoints
+    package: envoy.config.endpoint.v3
   envoy.config.filter.http.aws_lambda.v2.AWSLambdaConfig:
     relativepath: reference/api/github.com/solo-io/gloo/projects/gloo/api/external/envoy/extensions/aws/filter.proto.sk/#AWSLambdaConfig
     package: envoy.config.filter.http.aws_lambda.v2
@@ -335,6 +359,24 @@ apis:
   envoy.type.Percent:
     relativepath: reference/api/envoy/type/percent.proto.sk/#Percent
     package: envoy.type
+  failover.options.gloo.solo.io.Address:
+    relativepath: reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/enterprise/options/failover/failover.proto.sk/#Address
+    package: failover.options.gloo.solo.io
+  failover.options.gloo.solo.io.Endpoint:
+    relativepath: reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/enterprise/options/failover/failover.proto.sk/#Endpoint
+    package: failover.options.gloo.solo.io
+  failover.options.gloo.solo.io.Failover:
+    relativepath: reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/enterprise/options/failover/failover.proto.sk/#Failover
+    package: failover.options.gloo.solo.io
+  failover.options.gloo.solo.io.LbEndpoint:
+    relativepath: reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/enterprise/options/failover/failover.proto.sk/#LbEndpoint
+    package: failover.options.gloo.solo.io
+  failover.options.gloo.solo.io.LocalityLbEndpoints:
+    relativepath: reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/enterprise/options/failover/failover.proto.sk/#LocalityLbEndpoints
+    package: failover.options.gloo.solo.io
+  failover.options.gloo.solo.io.Simple:
+    relativepath: reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/enterprise/options/failover/failover.proto.sk/#Simple
+    package: failover.options.gloo.solo.io
   fault.options.gloo.solo.io.RouteAbort:
     relativepath: reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/options/faultinjection/fault.proto.sk/#RouteAbort
     package: fault.options.gloo.solo.io
@@ -557,6 +599,9 @@ apis:
   gloo.solo.io.WeightedDestinationOptions:
     relativepath: reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/options.proto.sk/#WeightedDestinationOptions
     package: gloo.solo.io
+  glooe.solo.io.Failover:
+    relativepath: reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/enterprise/failover.proto.sk/#Failover
+    package: glooe.solo.io
   glooe.solo.io.RateLimitConfig:
     relativepath: reference/api/github.com/solo-io/gloo/projects/gloo/api/v1/enterprise/ratelimit.proto.sk/#RateLimitConfig
     package: glooe.solo.io
