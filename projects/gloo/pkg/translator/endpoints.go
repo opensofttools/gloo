@@ -33,7 +33,7 @@ func (t *translatorInstance) computeClusterEndpoints(params plugins.Params, repo
 				if !ok {
 					continue
 				}
-				if err := upstreamPlug.ProcessEndpoints(params, upstream, clusterEndpointAssignments); err != nil {
+				if err := upstreamPlug.ProcessEndpoints(params, upstream, loadAssignment); err != nil {
 					reports.AddError(upstream, err)
 				}
 			}

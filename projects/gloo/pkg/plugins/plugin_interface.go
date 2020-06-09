@@ -52,7 +52,7 @@ type UpstreamPlugin interface {
 
 type EndpointPlugin interface {
 	Plugin
-	ProcessEndpoints(params Params, in *v1.Upstream, out []*envoyapi.ClusterLoadAssignment) error
+	ProcessEndpoints(params Params, in *v1.Upstream, out *envoyapi.ClusterLoadAssignment) error
 }
 
 /*
